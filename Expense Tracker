@@ -1,0 +1,107 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Expense {
+    private String category;
+    private double amount;
+
+    public Expense(String category, double amount) {
+        this.category = category;
+        this.amount = amount;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Category: " + category + ", Amount: $" + amount;
+    }
+}
+
+public class ExpenseTracker {
+    private ArrayList<Expense> expenses;
+    private Scanner scanner;
+
+    public ExpenseTracker() {
+        expenses = new ArrayList<>();
+        scanner = new Scanner(System.in);
+    }
+
+    public void addExpense() {
+        System.out.print("Enter category: ");
+        String category = scanner.nextLine();
+
+        System.out.print("Enter amount: ");
+        double amount = 0;
+        try {
+            amount = Double.parseDouble(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid amount. Please enter a number.");
+            return;
+        }
+
+        expenses.add(new Expense(category, amount));
+        System.out.println("Expense added!");
+    }
+
+    public void viewExpenses() {
+        if (expenses.isEmpty()) {
+            System.out.println("No expenses to show.");
+            return;
+        }
+
+        System.out.println("\nAll Expenses:");
+        for (Expense expense : expenses) {
+            System.out.println(expense);
+        }
+    }
+
+    public void viewTotalExpenses() {
+        double total = 0;
+        for (Expense expense : expenses) {
+            total += expense.getAmount();
+        }
+        System.out.printf("Total expenses: $%.2f%n", total);
+    }
+
+    public void run() {
+        while (true) {
+            System.out.println("\nExpense Tracker Menu:");
+            System.out.println("1. Add Expense");
+            System.out.println("2. View Expenses");
+            System.out.println("3. View Total Expenses");
+            System.out.println("4. Exit");
+            System.out.print("Choose an option: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    addExpense();
+                    break;
+                case "2":
+                    viewExpenses();
+                    break;
+                case "3":
+                    viewTotalExpenses();
+                    break;
+                case "4":
+                    System.out.println("Exiting... Goodbye!");
+                    return;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        ExpenseTracker tracker = new ExpenseTracker();
+        tracker.run();
+    }
+}
