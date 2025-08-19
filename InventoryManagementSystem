@@ -1,0 +1,191 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class InventoryManagementSystem {
+
+    static class Product {
+        private int id;
+        private String name;
+        private int quantity;
+        private double price;
+
+        public Product(int id, String name, int quantity, double price) {
+            this.id = id;
+            this.name = name;
+            this.quantity = quantity;
+            this.price = price;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        @Override
+        public String toString() {
+            return "ID: " + id + ", Name: " + name + ", Qty: " + quantity + ", Price: $" + price;
+        }
+    }
+
+    private ArrayList<Product> products = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
+    private int nextProductId = 1;
+
+    // User Interface Methods
+
+    private void addProduct() {
+        System.out.print("Enter product name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Enter quantity: ");
+        int quantity = readIntInput();
+
+        System.out.print("Enter price: ");
+        double price = readDoubleInput();
+
+        Product newProduct = new Product(nextProductId++, name, quantity, price);
+        products.add(newProduct);
+
+        System.out.println("Product added: " + newProduct);
+    }
+
+    private void viewProducts() {
+        if (products.isEmpty()) {
+            System.out.println("No products in inventory.");
+            return;
+        }
+        System.out.println("\nAll Products:");
+        for (Product p : products) {
+            System.out.println(p);
+        }
+    }
+
+    private void updateProduct() {
+        System.out.print("Enter product ID to update: ");
+        int id = readIntInput();
+
+        Product product = findProductById(id);
+        if (product == null) {
+            System.out.println("Product not found!");
+            return;
+        }
+
+        System.out.println("Current product details: " + product);
+
+        System.out.print("Enter new quantity (or -1 to skip): ");
+        int quantity = readIntInput();
+        if (quantity >= 0) {
+            product.setQuantity(quantity);
+        }
+
+        System.out.print("Enter new price (or -1 to skip): ");
+        double price = readDoubleInput();
+        if (price >= 0) {
+            product.setPrice(price);
+        }
+
+        System.out.println("Product updated: " + product);
+    }
+
+    private void deleteProduct() {
+        System.out.print("Enter product ID to delete: ");
+        int id = readIntInput();
+
+        Product product = findProductById(id);
+        if (product == null) {
+            System.out.println("Product not found!");
+            return;
+        }
+
+        products.remove(product);
+        System.out.println("Product deleted: " + product);
+    }
+
+    private Product findProductById(int id) {
+        for (Product p : products) {
+            if (p.getId() == id) return p;
+        }
+        return null;
+    }
+
+    private int readIntInput() {
+        while (true) {
+            String input = scanner.nextLine();
+            try {
+                int val = Integer.parseInt(input);
+                return val;
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Enter an integer: ");
+            }
+        }
+    }
+
+    private double readDoubleInput() {
+        while (true) {
+            String input = scanner.nextLine();
+            try {
+                double val = Double.parseDouble(input);
+                return val;
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid input. Enter a number: ");
+            }
+        }
+    }
+
+    public void run() {
+        while (true) {
+            System.out.println("\nInventory Management System");
+            System.out.println("1. Add product");
+            System.out.println("2. View all products");
+            System.out.println("3. Update product");
+            System.out.println("4. Delete product");
+            System.out.println("5. Exit");
+            System.out.print("Choose an option: ");
+
+            String choice = scanner.nextLine();
+
+            switch (choice) {
+                case "1":
+                    addProduct();
+                    break;
+                case "2":
+                    viewProducts();
+                    break;
+                case "3":
+                    updateProduct();
+                    break;
+                case "4":
+                    deleteProduct();
+                    break;
+                case "5":
+                    System.out.println("Exiting system. Goodbye!");
+                    return;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        new InventoryManagementSystem().run();
+    }
+}
