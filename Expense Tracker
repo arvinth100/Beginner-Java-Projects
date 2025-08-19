@@ -1,37 +1,24 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-class Expense {
-    private String category;
-    private double amount;
-
-    public Expense(String category, double amount) {
-        this.category = category;
-        this.amount = amount;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    @Override
-    public String toString() {
-        return "Category: " + category + ", Amount: $" + amount;
-    }
-}
-
 public class ExpenseTracker {
-    private ArrayList<Expense> expenses;
-    private Scanner scanner;
+    static class Expense {
+        String category;
+        double amount;
 
-    public ExpenseTracker() {
-        expenses = new ArrayList<>();
-        scanner = new Scanner(System.in);
+        Expense(String category, double amount) {
+            this.category = category;
+            this.amount = amount;
+        }
+
+        @Override
+        public String toString() {
+            return "Category: " + category + ", Amount: $" + amount;
+        }
     }
+
+    private ArrayList<Expense> expenses = new ArrayList<>();
+    private Scanner scanner = new Scanner(System.in);
 
     public void addExpense() {
         System.out.print("Enter category: ");
@@ -65,7 +52,7 @@ public class ExpenseTracker {
     public void viewTotalExpenses() {
         double total = 0;
         for (Expense expense : expenses) {
-            total += expense.getAmount();
+            total += expense.amount;
         }
         System.out.printf("Total expenses: $%.2f%n", total);
     }
@@ -101,7 +88,6 @@ public class ExpenseTracker {
     }
 
     public static void main(String[] args) {
-        ExpenseTracker tracker = new ExpenseTracker();
-        tracker.run();
+        new ExpenseTracker().run();
     }
 }
