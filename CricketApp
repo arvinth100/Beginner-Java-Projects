@@ -1,0 +1,104 @@
+import java.util.*;
+
+class Player {
+    String name;
+    String role;
+    int runs = 0;
+    int balls = 0;
+    int wickets = 0;
+
+    Player(String name, String role) {
+        this.name = name;
+        this.role = role;
+    }
+}
+
+class Team {
+    String teamName;
+    ArrayList<Player> players = new ArrayList<>();
+    int totalRuns = 0;
+    int wicketsLost = 0;
+
+    Team(String teamName) {
+        this.teamName = teamName;
+    }
+
+    void addPlayer(String name, String role) {
+        players.add(new Player(name, role));
+    }
+}
+
+public class CricketApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Random rand = new Random();
+
+        System.out.println("🏏 Welcome to Cricket Score Simulator");
+
+        // Select format
+        System.out.println("Choose Format: 1. T20  2. ODI  3. Test");
+        int format = sc.nextInt();
+        int overs = (format == 1) ? 20 : (format == 2) ? 50 : 90;
+
+        // Team creation
+        System.out.print("Enter Team 1 Name: ");
+        String t1Name = sc.next();
+        Team team1 = new Team(t1Name);
+
+        System.out.print("Enter Team 2 Name: ");
+        String t2Name = sc.next();
+        Team team2 = new Team(t2Name);
+
+        // Add players
+        System.out.println("Add 5 players for " + team1.teamName + " (Captain, WK, 2 Batsmen, 1 Bowler):");
+        for(int i=0; i<5; i++) {
+            System.out.print("Enter Player " + (i+1) + " name & role: ");
+            String name = sc.next();
+            String role = sc.next();
+            team1.addPlayer(name, role);
+        }
+
+        System.out.println("Add 5 players for " + team2.teamName + " (Captain, WK, 2 Batsmen, 1 Bowler):");
+        for(int i=0; i<5; i++) {
+            System.out.print("Enter Player " + (i+1) + " name & role: ");
+            String name = sc.next();
+            String role = sc.next();
+            team2.addPlayer(name, role);
+        }
+
+        // Simulate score for Team 1
+        simulateMatch(team1, overs, rand);
+
+        // Simulate score for Team 2
+        simulateMatch(team2, overs, rand);
+
+        // Display Result
+        System.out.println("\n🏆 Match Result:");
+        System.out.println(team1.teamName + " scored: " + team1.totalRuns + "/" + team1.wicketsLost);
+        System.out.println(team2.teamName + " scored: " + team2.totalRuns + "/" + team2.wicketsLost);
+
+        if(team1.totalRuns > team2.totalRuns) 
+            System.out.println("🎉 " + team1.teamName + " Wins!");
+        else if(team2.totalRuns > team1.totalRuns) 
+            System.out.println("🎉 " + team2.teamName + " Wins!");
+        else 
+            System.out.println("Match Drawn!");
+    }
+
+    // Simulate batting
+    static void simulateMatch(Team team, int overs, Random rand) {
+        System.out.println("\nBatting: " + team.teamName);
+        int balls = overs * 6;
+        for(int i=0; i<balls; i++) {
+            if(team.wicketsLost == 5) break; // all out
+            int outcome = rand.nextInt(8); // 0 to 7
+            if(outcome == 7) { // Wicket
+                team.wicketsLost++;
+                System.out.println("Wicket! Total: " + team.totalRuns + "/" + team.wicketsLost);
+            } else { // Runs
+                team.totalRuns += outcome;
+                System.out.println("Run: " + outcome + " | Total: " + team.totalRuns + "/" + team.wicketsLost);
+            }
+        }
+    }
+}
